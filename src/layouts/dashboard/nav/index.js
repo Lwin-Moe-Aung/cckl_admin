@@ -15,6 +15,7 @@ import NavSection from '../../../components/nav-section';
 //
 import navConfig from './config';
 
+import useAuth from '../../../hooks/useAuth';
 // ----------------------------------------------------------------------
 
 const NAV_WIDTH = 280;
@@ -35,6 +36,8 @@ Nav.propTypes = {
 };
 
 export default function Nav({ openNav, onCloseNav }) {
+  const {auth} = useAuth();
+
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
@@ -60,15 +63,15 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar src={auth?.user?.photo} alt="photoURL" />
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {auth?.user?.username}
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                {auth?.user?.is_admin && 'Admin'}
               </Typography>
             </Box>
           </StyledAccount>

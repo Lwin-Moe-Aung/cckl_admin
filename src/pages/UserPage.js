@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Card,
@@ -22,6 +22,10 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
+
+import { useNavigate, useLocation } from "react-router-dom";
+
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 // components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
@@ -30,6 +34,8 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import USERLIST from '../_mock/user';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -87,6 +93,15 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // user from api
+  const [users, setUsers] = useState();
+
+  const axiosPrivate = useAxiosPrivate();
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -146,12 +161,38 @@ export default function UserPage() {
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const getUsers = async () => {
+        try {
+            const response = await axiosPrivate.get('/admin/users/all', {
+                signal: controller.signal
+            });
+            console.log(response.data);
+
+            if(isMounted) setUsers(response.data);
+        } catch (err) {
+            console.error(err);
+            navigate('/login', { state: { from: location }, replace: true });
+        }
+    }
+
+    getUsers();
+
+    return () => {
+        isMounted = false;
+        controller.abort();
+    }
+  }, [])
+
   return (
     <>
       <Helmet>
         <title> User | Minimal UI </title>
       </Helmet>
 
+     
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>

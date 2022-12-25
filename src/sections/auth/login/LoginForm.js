@@ -1,4 +1,4 @@
-import {React, useState, useRef } from 'react';
+import {React, useState } from 'react';
 import { useNavigate} from 'react-router-dom';
 // @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, Alert } from '@mui/material';
@@ -56,8 +56,9 @@ export default function LoginForm() {
     <>
       <form onSubmit={handleSubmit}>
         <Stack spacing={3}>
-          <Alert severity="error">{errMsg}</Alert>
-          {/* <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p> */}
+            {
+              errMsg && <Alert severity="error">{errMsg}</Alert>
+            }
             <TextField name="email" label="Email address" onChange={(e) => setEmail(e.target.value)}/>
 
             <TextField
