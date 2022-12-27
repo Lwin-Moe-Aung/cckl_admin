@@ -207,7 +207,7 @@ export default function UserPage() {
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -241,7 +241,9 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell align="left">{email}</TableCell>
-                        <TableCell align="left">{email}</TableCell>
+                        {
+                          is_admin ? <TableCell align="left">Admin</TableCell> : <TableCell align="left"> Not Admin</TableCell>
+                        }
 
 
                         {/* <TableCell align="left">
