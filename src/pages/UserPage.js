@@ -4,6 +4,7 @@ import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 // @mui
 import {
+  Link,
   Card,
   Table,
   Stack,
@@ -23,7 +24,7 @@ import {
   TablePagination,
 } from '@mui/material';
 
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 // components
@@ -201,9 +202,12 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             Users
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button>
+          <Link to="/dashboard/users/create" component={RouterLink} state={{ from: location}} replace>
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+              New User
+            </Button>
+          </Link>
+          
         </Stack>
 
         <Card>
@@ -241,9 +245,11 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell align="left">{email}</TableCell>
-                        {
+                        <TableCell align="left">{email}</TableCell>
+
+                        {/* {
                           is_admin ? <TableCell align="left">Admin</TableCell> : <TableCell align="left"> Not Admin</TableCell>
-                        }
+                        } */}
 
 
                         {/* <TableCell align="left">

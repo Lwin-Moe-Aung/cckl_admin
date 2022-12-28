@@ -1,5 +1,7 @@
 import { createContext, useState } from "react";
+
 import axios from "../api/axios";
+
 const LOGOUT_URL = '/auth/logout';
 
 const AuthContext = createContext({});

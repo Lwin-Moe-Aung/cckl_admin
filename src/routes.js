@@ -5,6 +5,7 @@ import SimpleLayout from './layouts/simple';
 //
 import {DashboardAppPage, UserPage, CategoryPage, BlogPage, LoginPage, Page404, WelcomePage} from './pages';
 import { RequireAuth } from "./components/require-auth";
+import { AddNewUserPage } from "./pages/AddNewUserPage";
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -17,7 +18,10 @@ export default function Router() {
         {/* <Route element={<Navigate to="/dashboard/app"/>}/> */}
         <Route element={<RequireAuth />}>
           <Route path="app" element={<DashboardAppPage />} />
+          {/* users */}
           <Route path="users" element={<UserPage />} />
+          <Route path="users/create" element={<AddNewUserPage />} />
+
           <Route path="categories" element={<CategoryPage />} />
           <Route path="blogs" element={<BlogPage />} />
         </Route>
