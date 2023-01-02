@@ -21,21 +21,23 @@ import {
   Typography,
   IconButton,
   TableContainer,
-  TablePagination,
+  TablePagination
 } from '@mui/material';
 
 import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 // components
-import Label from '../components/label';
-import Iconify from '../components/iconify';
-import Scrollbar from '../components/scrollbar';
-// sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
-import USERLIST from '../_mock/user';
+import Label from '../../components/label';
+import Iconify from '../../components/iconify';
+import Scrollbar from '../../components/scrollbar';
+import { SnackBar } from '../../components/snackbar';
 
+// sections
+import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
+// mock
+import USERLIST from '../../_mock/user';
+/* eslint-disable camelcase */
 
 
 // ----------------------------------------------------------------------
@@ -81,57 +83,77 @@ function applySortFilter(array, comparator, query) {
 
 export default function UserPage() {
   const [open, setOpen] = useState(null);
-
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [openId, setOpenId] = useState();
+  // snack bar
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [severity, setSeverity] = useState();
+  const [message, setMessage] = useState();
+  const [duration, setDuration] = useState();
   // user from api
   const [users, setUsers] = useState();
-
+  const [totalPages, setTotalPages] = useState();
   const axiosPrivate = useAxiosPrivate();
-
   const navigate = useNavigate();
-
   const location = useLocation();
-
+  //* api url
+  const getAllUserUrl = '/admin/users/all';
+  const deletUserUrl = '/admin/users/delete';
   // fetch users data---------------------------------------------
   useEffect(() => {
-    console.log(USERLIST);
     let isMounted = true;
     const controller = new AbortController();
     const getUsers = async () => {
         try {
-            const response = await axiosPrivate.get('/admin/users/all', {
+            const response = await axiosPrivate.get(getAllUserUrl, {
                 signal: controller.signal
             });
-            console.log(response.data.data);
-
-            if(isMounted) setUsers(response.data);
+            if(isMounted){
+              setUsers(response.data.data);
+              setTotalPages(response.data.totalPages);
+              console.log(users);
+            }
         } catch (err) {
             console.error(err);
             navigate('/login', { state: { from: location }, replace: true });
         }
     }
-
     getUsers();
-
     return () => {
         isMounted = false;
         controller.abort();
     }
   }, [])
+  //* delete users data ----------------------------
+  const handleDelete = async () => {
+    try {
+      const data = {
+        user_id: openId
+      }
+      await axiosPrivate.post(deletUserUrl, JSON.stringify(data))
+      settingSnackBar("Delete success", "success");
+      setUsers(users.filter(usr => usr.id !== openId));
+      setOpen(false);
+    } catch (err) {
+      settingSnackBar("Delete Fail!", "warrning");
+      
+    }
+  };
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+  const settingSnackBar = (message, severity) => {
+    setSnackOpen(true);
+    setMessage(message);
+    setSeverity(severity);
+    setDuration(1000);
+  };
+  const handleOpenMenu = (e, id) => {
+    setOpen(e.currentTarget);
+    setOpenId(id);
   };
 
   const handleCloseMenu = () => {
@@ -184,7 +206,7 @@ export default function UserPage() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(users?.data, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers?.length && !!filterName;
 
@@ -193,7 +215,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> User | CCKL </title>
       </Helmet>
 
      
@@ -227,7 +249,7 @@ export default function UserPage() {
                 />
                 <TableBody>
                   {filteredUsers?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)?.map((row) => {
-                    const { id, username, email, isAdmin, createdAt, photo } = row;
+                    const { id, username, email, is_admin, createdAt, photo } = row;
                     const selectedUser = selected.indexOf(username) !== -1;
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
@@ -252,14 +274,14 @@ export default function UserPage() {
                         } */}
 
 
-                        {/* <TableCell align="left">
+                       <TableCell align="left">
                           <Label color={(is_admin && 'success') || 'error'}>{is_admin ?  'Admin' : 'Not Admin' }</Label>
-                        </TableCell> */}
+                        </TableCell> 
 
                         <TableCell align="left">{createdAt}</TableCell>
      
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={(e) => handleOpenMenu(e,id)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
@@ -303,7 +325,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={users?.data.length}
+            count={users?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -330,16 +352,27 @@ export default function UserPage() {
           },
         }}
       >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
+        <Link to={`/dashboard/users/edit/${openId}`} component={RouterLink} sx={{ display: 'contents' }}>
+          <MenuItem>
+            <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+              Edit
+          </MenuItem>
+        </Link>
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }} onClick={handleDelete}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
+            Delete
         </MenuItem>
       </Popover>
+      open, duration, handleClose, severity, message
+      {/* Success Snack bar */}
+        <SnackBar
+          open= {snackOpen}
+          duration= {duration}
+          handleClose= { ()=> setSnackOpen(false)}
+          severity= {severity}
+          message= {message}
+        />
     </>
   );
 }

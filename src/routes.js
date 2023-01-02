@@ -3,9 +3,8 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
-import {DashboardAppPage, UserPage, CategoryPage, BlogPage, LoginPage, Page404, WelcomePage} from './pages';
+import {DashboardAppPage, UserPage, CategoryPage, BlogPage, LoginPage, Page404, WelcomePage, AddNewUserPage, EditUserPage} from './pages';
 import { RequireAuth } from "./components/require-auth";
-import { AddNewUserPage } from "./pages/AddNewUserPage";
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -21,6 +20,7 @@ export default function Router() {
           {/* users */}
           <Route path="users" element={<UserPage />} />
           <Route path="users/create" element={<AddNewUserPage />} />
+          <Route path="users/edit/:id" element={<EditUserPage />} />
 
           <Route path="categories" element={<CategoryPage />} />
           <Route path="blogs" element={<BlogPage />} />
