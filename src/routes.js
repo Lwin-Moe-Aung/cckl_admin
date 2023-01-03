@@ -3,7 +3,19 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
-import {DashboardAppPage, UserPage, CategoryPage, BlogPage, LoginPage, Page404, WelcomePage, AddNewUserPage, EditUserPage} from './pages';
+import {
+  DashboardAppPage, 
+  UserPage, 
+  CategoryPage, 
+  BlogPage, 
+  LoginPage, 
+  Page404, 
+  WelcomePage, 
+  AddNewUserPage, 
+  EditUserPage, 
+  AddNewCategoryPage,
+  EditCategoryPage
+} from './pages';
 import { RequireAuth } from "./components/require-auth";
 // ----------------------------------------------------------------------
 
@@ -21,8 +33,11 @@ export default function Router() {
           <Route path="users" element={<UserPage />} />
           <Route path="users/create" element={<AddNewUserPage />} />
           <Route path="users/edit/:id" element={<EditUserPage />} />
-
+          {/* categories */}
           <Route path="categories" element={<CategoryPage />} />
+          <Route path="categories/create" element={<AddNewCategoryPage />} />
+          <Route path="categories/edit/:id" element={<EditCategoryPage />} />
+
           <Route path="blogs" element={<BlogPage />} />
         </Route>
       </Route>

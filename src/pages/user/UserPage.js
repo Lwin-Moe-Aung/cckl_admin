@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import { create, filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 // @mui
 import {
@@ -12,7 +11,6 @@ import {
   Avatar,
   Button,
   Popover,
-  Checkbox,
   TableRow,
   MenuItem,
   TableBody,
@@ -34,9 +32,8 @@ import Scrollbar from '../../components/scrollbar';
 import { SnackBar } from '../../components/snackbar';
 
 // sections
-import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
-// mock
-import USERLIST from '../../_mock/user';
+// import { Header, UserListToolbar } from '../../sections/@dashboard/user';
+import { Header } from '../../components/table-header';
 /* eslint-disable camelcase */
 
 
@@ -86,7 +83,7 @@ export default function UserPage() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openId, setOpenId] = useState();
@@ -151,6 +148,7 @@ export default function UserPage() {
     setSeverity(severity);
     setDuration(1000);
   };
+
   const handleOpenMenu = (e, id) => {
     setOpen(e.currentTarget);
     setOpenId(id);
@@ -166,29 +164,29 @@ export default function UserPage() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = users.map((n) => n.name);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
+  // const handleClick = (event, name) => {
+  //   const selectedIndex = selected.indexOf(name);
+  //   let newSelected = [];
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, name);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+  //   }
+  //   setSelected(newSelected);
+  // };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -199,18 +197,16 @@ export default function UserPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const handleFilterByName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
+  // const handleFilterByName = (event) => {
+  //   setPage(0);
+  //   setFilterName(event.target.value);
+  // };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users?.length) : 0;
 
   const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers?.length && !!filterName;
-
-  
 
   return (
     <>
@@ -238,14 +234,11 @@ export default function UserPage() {
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <Header
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)?.map((row) => {
@@ -254,7 +247,7 @@ export default function UserPage() {
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, username)} />
+                          {/* <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, username)} /> */}
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
@@ -267,14 +260,8 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell align="left">{email}</TableCell>
-                        <TableCell align="left">{email}</TableCell>
 
-                        {/* {
-                          is_admin ? <TableCell align="left">Admin</TableCell> : <TableCell align="left"> Not Admin</TableCell>
-                        } */}
-
-
-                       <TableCell align="left">
+                        <TableCell align="left">
                           <Label color={(is_admin && 'success') || 'error'}>{is_admin ?  'Admin' : 'Not Admin' }</Label>
                         </TableCell> 
 
@@ -364,15 +351,15 @@ export default function UserPage() {
             Delete
         </MenuItem>
       </Popover>
-      open, duration, handleClose, severity, message
+     
       {/* Success Snack bar */}
-        <SnackBar
-          open= {snackOpen}
-          duration= {duration}
-          handleClose= { ()=> setSnackOpen(false)}
-          severity= {severity}
-          message= {message}
-        />
+      <SnackBar
+        open= {snackOpen}
+        duration= {duration}
+        handleClose= { ()=> setSnackOpen(false)}
+        severity= {severity}
+        message= {message}
+      />
     </>
   );
 }
