@@ -1,11 +1,13 @@
+import {Link as RouterLink, useLocation } from "react-router-dom";
+
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Grid, Button, Container, Stack, Typography } from '@mui/material';
+import { Grid, Button, Container, Stack, Typography, Link } from '@mui/material';
 // components
-import Iconify from '../components/iconify';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
+import Iconify from '../../components/iconify';
+import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../sections/@dashboard/blog';
 // mock
-import POSTS from '../_mock/blog';
+import POSTS from '../../_mock/blog';
 
 // ----------------------------------------------------------------------
 
@@ -18,10 +20,13 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function BlogPage() {
+  const createBlogUrl = '/dashboard/blogs/create';
+  const location = useLocation();
+
   return (
     <>
       <Helmet>
-        <title> Dashboard: Blog | Minimal UI </title>
+        <title> Dashboard: Blog | CCKL </title>
       </Helmet>
 
       <Container>
@@ -29,15 +34,18 @@ export default function BlogPage() {
           <Typography variant="h4" gutterBottom>
             Blog
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Link to={createBlogUrl} component={RouterLink} state={{ from: location}} replace>
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             New Post
-          </Button>
+            </Button>
+          </Link>
         </Stack>
+       
 
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+        {/* <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
           <BlogPostsSearch posts={POSTS} />
           <BlogPostsSort options={SORT_OPTIONS} />
-        </Stack>
+        </Stack> */}
 
         <Grid container spacing={3}>
           {POSTS.map((post, index) => (

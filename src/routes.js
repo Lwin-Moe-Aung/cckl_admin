@@ -14,7 +14,8 @@ import {
   AddNewUserPage, 
   EditUserPage, 
   AddNewCategoryPage,
-  EditCategoryPage
+  EditCategoryPage,
+  AddNewBlogPage
 } from './pages';
 import { RequireAuth } from "./components/require-auth";
 // ----------------------------------------------------------------------
@@ -38,7 +39,10 @@ export default function Router() {
           <Route path="categories/create" element={<AddNewCategoryPage />} />
           <Route path="categories/edit/:id" element={<EditCategoryPage />} />
 
+          {/* blog */}
           <Route path="blogs" element={<BlogPage />} />
+          <Route path="blogs/create" element={<AddNewBlogPage />} />
+
         </Route>
       </Route>
       <Route element={<SimpleLayout />} >

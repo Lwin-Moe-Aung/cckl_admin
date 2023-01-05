@@ -2,6 +2,8 @@
 import Router from './routes';
 // theme
 import ThemeProvider from './theme';
+import './App.css';
+
 // components
 import ScrollToTop from './components/scroll-to-top';
 import { StyledChart } from './components/chart';

@@ -1,6 +1,5 @@
 export { default as WelcomePage } from './WelcomePage';
 export { default as DashboardAppPage } from './DashboardAppPage';
-export { default as BlogPage } from './BlogPage';
 export { default as LoginPage } from './LoginPage';
 export { default as Page404 } from './Page404';
 
@@ -14,3 +13,6 @@ export { default as CategoryPage } from './category/CategoryPage';
 export { default as AddNewCategoryPage } from './category/AddNewCategoryPage';
 export { default as EditCategoryPage } from './category/EditCategoryPage';
 
+//* blogs
+export { default as BlogPage } from './blog/BlogPage';
+export { default as AddNewBlogPage } from './blog/AddNewBlogPage';
