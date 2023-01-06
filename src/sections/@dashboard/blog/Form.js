@@ -1,82 +1,63 @@
 import { React, useState, useEffect} from 'react'
 import { 
     TextField, 
-    IconButton, 
-    InputAdornment,
     Grid,
     Card,
-    FormControl,
-    FormLabel,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
     Alert,
-    FormHelperText,
-    TextareaAutosize
+    Input,
+    Box
   } from '@mui/material';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
-import { EditorState, convertToRaw} from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+import useAuth from '../../../hooks/useAuth';
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import { MultipleDropzone } from '../../../components/Uploader/MultipleUploaders';
-import Iconify from '../../../components/iconify';
+import { SingleDropzone } from '../../../components/Uploader/SingleUploaders';
 import {Cancel} from '../../../components/cancel-button';
 import { SaveButton } from '../../../components/save-button';
 import { CheckboxesTags } from '../../../components/checkboxes-tags';
 import { IOSSwitch } from '../../../components/ios-switch';
-import axios from '../../../api/axios';
+import { TextEditor } from '../../../components/text-editor';
 /* eslint-disable camelcase */
-
 
 export default function Form({url, initValues}){
     const [published, setPublished] = useState(initValues.published);
+    const [selectedCategory, setSelectedCategory] = useState([]);
 
-    const editorState = EditorState.createEmpty();
-    const [description, setDescription] = useState(editorState);
-    
+    const {auth} = useAuth();
     const axiosPrivate = useAxiosPrivate();
+    const [editorErrMsg, setEditorErrMsg] = useState('');
     const [errMsg, setErrMsg] = useState('');
+    const [extraImages, setExtraImages ] = useState(initValues.image);
+
     const navigate = useNavigate();
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({defaultValues: initValues});
-    const backUrl = "/dashboard/users";
+    const backUrl = "/dashboard/blogs";
     const uploadUrl = "/admin/uploads/post-image";
 
-    const uploadImageCallBack = (files) => {
-        return new Promise((resolve, reject) => {
-            const formData = new FormData();
-            formData.append('image', files);
-            axios.post(uploadUrl, formData)
-                .then((data) =>  {
-                    resolve({data:{link: data.data.imagePath}})
-                })
-                .catch((error) => {
-                    reject(error);
-                }) 
-        });
-    }
-    const onEditorStateChange = (editorState) => {
-        setDescription(editorState);
-    }
+    //* console
+    // console.log(`published Form: ${published}`)
 
-    const imageURL = (data) => {
-        setValue("photo", data);
-    }
-     
+    useEffect(() => {
+        setValue('user_id', auth?.user?.id)
+    },[]);
+   
     const cardstyle = { width: '100%',  p: 2, backgroundColor: '#FFFFFF', fontSize: 2 };
+    
     const onSubmit = async (data) => {
-        // e.preventDefault();
+        if(data.description.value.length < 50){
+            setEditorErrMsg('Required, Add description Minimum length 50 characters');
+            return;
+        }
         try{
             await axiosPrivate.post(url,
-                JSON.stringify(data),
+                JSON.stringify({...data, description: data.description.value, image:extraImages}),
                 {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 }
             );
-            // error throwing
             navigate(backUrl, { replace: true });
         } catch (err) {
             if (err?.response?.status === 400) {
@@ -87,10 +68,6 @@ export default function Form({url, initValues}){
         }
     }
     
-    const handleChange = async () => {
-        await setPublished(!published);
-        await setValue("published", published);
-    }
     return (
         <Card sx={cardstyle}>
             {
@@ -110,56 +87,46 @@ export default function Form({url, initValues}){
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
-                        <TextField 
-                            fullWidth
-                            name="slug" 
-                            label="Slug" 
-                            {...register("slug", { required: "Slug is required." })}
-                            error={Boolean(errors.slug)}
-                            helperText={errors.slug?.message}
+                        {/* <SingleDropzone
+                            uploadUrl={uploadUrl}
+                            label="Dropzone"
+                            id="dropzone-uploader"
+                            extraImages={extraImages}
+                            setExtraImages={(data) => {
+                                setExtraImages([...extraImages, data])
+                                }}
+                            removeImage={
+                                async (i) => {
+                                    await extraImages.splice(i,1)
+                                    await setExtraImages([...extraImages])
+                                }}
+                        /> */}
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                        <CheckboxesTags 
+                            label="Categories"
+                            setSelectedCategory ={ 
+                                (newValue) => {
+                                    setSelectedCategory(newValue);
+                                    setValue('category_id', newValue)
+                                }}
+                            selectedCategory = {selectedCategory}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
-                        <CheckboxesTags label="Categories"/>
+                        <TextEditor
+                            setValue={(val) => setValue('description', val)}
+                        />    
+                        {editorErrMsg && <Alert severity="error" sx={{ mb: 2 }}>{editorErrMsg}</Alert>}
+
                     </Grid>
-                    <Grid item xs={12} sm={12} md={12}>
-                        <Editor
-                            editorState={description}
-                            toolbarClassName="toolbarClassName"
-                            wrapperClassName="wrapperClassName"
-                            editorClassName="editorClassName"
-                            onEditorStateChange={onEditorStateChange}
-                            toolbar={{
-                                inline: { inDropdown: true },
-                                list: { inDropdown: true },
-                                textAlign: { inDropdown: true },
-                                link: { inDropdown: true },
-                                history: { inDropdown: true },
-                                image: {
-                                    uploadEnabled: true,
-                                    uploadCallback: uploadImageCallBack,
-                                    previewImage: true,
-                                    alt: { present: false, mandatory: false },
-                                    defaultSize: {
-                                        height: 'auto',
-                                        width: 'auto',
-                                   },
-                                },
-                            }}
-                        />
-                        <TextareaAutosize 
-                            style={{display:'none'}} 
-                            disabled 
-                            ref={(val) => {initValues.description = val}} 
-                            value={draftToHtml(convertToRaw(description.getCurrentContent())) } 
-                        />
-                    </Grid>
-                    
-                    
                     <Grid item xs={12} sm={12} md={12}>
                         <IOSSwitch
                             published= {published}
-                            onChange= {handleChange}
+                            onChange= {async () => {
+                                await setPublished(!published)
+                                await setValue("published", !published)
+                            }}
                             label = "Publish"
                         />
                     </Grid>
@@ -168,8 +135,15 @@ export default function Form({url, initValues}){
                             uploadUrl={uploadUrl}
                             label="Dropzone"
                             id="dropzone-uploader"
-                            photo={initValues.photo}
-                            imageURL={imageURL}
+                            extraImages={extraImages}
+                            setExtraImages={(data) => {
+                                setExtraImages([...extraImages, data])
+                                }}
+                            removeImage={
+                                async (i) => {
+                                    await extraImages.splice(i,1)
+                                    await setExtraImages([...extraImages])
+                                }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={12} 

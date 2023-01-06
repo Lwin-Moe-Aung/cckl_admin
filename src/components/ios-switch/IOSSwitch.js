@@ -55,9 +55,7 @@ const IOSSwitchStyled = styled((props) => (
 }));
 
 export default function IOSSwitch({published, onChange, label}){
-    console.log("asdfasdfasd");
-
-    console.log(published);
+    console.log(`published: ${published}`);
     return (
         <FormControlLabel
             control={

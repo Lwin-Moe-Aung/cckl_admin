@@ -36,7 +36,7 @@ export default function BlogPage() {
           </Typography>
           <Link to={createBlogUrl} component={RouterLink} state={{ from: location}} replace>
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Post
+              New Post
             </Button>
           </Link>
         </Stack>

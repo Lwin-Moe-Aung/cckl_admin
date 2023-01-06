@@ -13,15 +13,14 @@ import { Form } from '../../sections/@dashboard/blog';
 export default function AddNewCategoryPage() {
     const location = useLocation();
     const from = location.state?.from.pathname || "/";
-    const blogCreateUrl = "/admin/blogs/create";
+    const blogCreateUrl = "/admin/posts/create";
     const initValues = {
         title:"",
-        slug: "",
         description: "",
         user_id: "",
-        category_id: "",
+        category_id: [],
         published: true,
-        image: "",
+        image: [],
 
     }
 
@@ -29,14 +28,14 @@ export default function AddNewCategoryPage() {
         <>
         <Container>
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h4" gutterBottom>
-                Add New Blog
-            </Typography>
-            <Link to={from} component={RouterLink}>
-                <Button variant="contained" startIcon={<Iconify icon="akar-icons:arrow-back-thick-fill" />}>
-                Back
-                </Button>
-            </Link>
+                <Typography variant="h4" gutterBottom>
+                    Add New Blog
+                </Typography>
+                <Link to={from} component={RouterLink}>
+                    <Button variant="contained" startIcon={<Iconify icon="akar-icons:arrow-back-thick-fill" />}>
+                    Back
+                    </Button>
+                </Link>
             </Stack>
 
             <Form
