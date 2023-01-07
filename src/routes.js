@@ -15,7 +15,8 @@ import {
   EditUserPage, 
   AddNewCategoryPage,
   EditCategoryPage,
-  AddNewBlogPage
+  AddNewBlogPage,
+  ViewBlogPage
 } from './pages';
 import { RequireAuth } from "./components/require-auth";
 // ----------------------------------------------------------------------
@@ -42,6 +43,7 @@ export default function Router() {
           {/* blog */}
           <Route path="blogs" element={<BlogPage />} />
           <Route path="blogs/create" element={<AddNewBlogPage />} />
+          <Route path="blogs/:slug" element={<ViewBlogPage />} />
 
         </Route>
       </Route>

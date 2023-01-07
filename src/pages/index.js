@@ -16,3 +16,4 @@ export { default as EditCategoryPage } from './category/EditCategoryPage';
 //* blogs
 export { default as BlogPage } from './blog/BlogPage';
 export { default as AddNewBlogPage } from './blog/AddNewBlogPage';
+export { default as ViewBlogPage } from './blog/ViewBlogPage'; 

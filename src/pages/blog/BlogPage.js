@@ -1,3 +1,4 @@
+import {React, useEffect, useState} from 'react';
 import {Link as RouterLink, useLocation } from "react-router-dom";
 
 import { Helmet } from 'react-helmet-async';
@@ -8,6 +9,8 @@ import Iconify from '../../components/iconify';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../sections/@dashboard/blog';
 // mock
 import POSTS from '../../_mock/blog';
+
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 // ----------------------------------------------------------------------
 
@@ -20,8 +23,42 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function BlogPage() {
+  const axiosPrivate = useAxiosPrivate();
   const createBlogUrl = '/dashboard/blogs/create';
   const location = useLocation();
+  const [posts, setPosts] = useState();
+  const [totalPages, setTotalPages] = useState();
+  const [errMsg, setErrMsg] = useState();
+
+  const getAllPostsUrl = "/admin/posts/all"
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const getAllPosts = async () => {
+      try {
+        const posts = await axiosPrivate.get(getAllPostsUrl,{
+          signal: controller.signal
+        });
+
+        if(isMounted){
+          setPosts(posts.data.data);
+          setTotalPages(posts.data.totalPages);
+        }
+      } catch (error) {
+        if(error.response.status === 400) {
+          setErrMsg(error.response.data.message)
+        }else{
+          setErrMsg("Something Wrong!");
+        }
+      }
+    }
+    getAllPosts()
+    return () => {
+      isMounted = false;
+      controller.abort();
+    }
+  },[])
 
   return (
     <>
@@ -48,7 +85,7 @@ export default function BlogPage() {
         </Stack> */}
 
         <Grid container spacing={3}>
-          {POSTS.map((post, index) => (
+          {posts?.map((post, index) => (
             <BlogPostCard key={post.id} post={post} index={index} />
           ))}
         </Grid>

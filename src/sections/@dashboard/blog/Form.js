@@ -29,15 +29,13 @@ export default function Form({url, initValues}){
     const axiosPrivate = useAxiosPrivate();
     const [editorErrMsg, setEditorErrMsg] = useState('');
     const [errMsg, setErrMsg] = useState('');
+    const [coverImage, setCoverImage] = useState(initValues.cover_image)
     const [extraImages, setExtraImages ] = useState(initValues.image);
 
     const navigate = useNavigate();
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({defaultValues: initValues});
     const backUrl = "/dashboard/blogs";
     const uploadUrl = "/admin/uploads/post-image";
-
-    //* console
-    // console.log(`published Form: ${published}`)
 
     useEffect(() => {
         setValue('user_id', auth?.user?.id)
@@ -52,7 +50,7 @@ export default function Form({url, initValues}){
         }
         try{
             await axiosPrivate.post(url,
-                JSON.stringify({...data, description: data.description.value, image:extraImages}),
+                JSON.stringify({...data, cover_image:coverImage, description: data.description.value, image:extraImages}),
                 {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
@@ -63,7 +61,7 @@ export default function Form({url, initValues}){
             if (err?.response?.status === 400) {
                 setErrMsg(err.response.data.message);
             } else {
-                setErrMsg('User Create Failed');
+                setErrMsg('Post Create Failed');
             }
         }
     }
@@ -87,20 +85,16 @@ export default function Form({url, initValues}){
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
-                        {/* <SingleDropzone
+                        <SingleDropzone
                             uploadUrl={uploadUrl}
                             label="Dropzone"
                             id="dropzone-uploader"
-                            extraImages={extraImages}
-                            setExtraImages={(data) => {
-                                setExtraImages([...extraImages, data])
+                            coverImage={coverImage}
+                            setCoverImage={(data) => {
+                                setCoverImage(data)
                                 }}
-                            removeImage={
-                                async (i) => {
-                                    await extraImages.splice(i,1)
-                                    await setExtraImages([...extraImages])
-                                }}
-                        /> */}
+                            removeCoverImage={() => setCoverImage('')}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
                         <CheckboxesTags 

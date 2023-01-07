@@ -2,12 +2,15 @@ import PropTypes from 'prop-types';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+
 // utils
 import { fDate } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import SvgColor from '../../../components/svg-color';
 import Iconify from '../../../components/iconify';
+/* eslint-disable camelcase */
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +19,7 @@ const StyledCardMedia = styled('div')({
   paddingTop: 'calc(100% * 3 / 4)',
 });
 
-const StyledTitle = styled(Link)({
+const StyledTitle = styled(RouterLink)({
   height: 44,
   overflow: 'hidden',
   WebkitLineClamp: 2,
@@ -57,16 +60,16 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { cover, title, view, comment, share, author, createdAt } = post;
+  const { cover_image, title, view_count, postComment, postUser, createdAt, slug } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
-
+  const viewUrl = '/dashboard/blogs';
   const POST_INFO = [
-    { number: comment, icon: 'eva:message-circle-fill' },
-    { number: view, icon: 'eva:eye-fill' },
-    { number: share, icon: 'eva:share-fill' },
+    { number: postComment.length, icon: 'eva:message-circle-fill' },
+    { number: view_count, icon: 'eva:eye-fill' },
   ];
 
+  console.log(postComment)
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
       <Card sx={{ position: 'relative' }}>
@@ -91,22 +94,10 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          <SvgColor
-            color="paper"
-            src="/assets/icons/shape-avatar.svg"
-            sx={{
-              width: 80,
-              height: 36,
-              zIndex: 9,
-              bottom: -15,
-              position: 'absolute',
-              color: 'background.paper',
-              ...((latestPostLarge || latestPost) && { display: 'none' }),
-            }}
-          />
+         
           <StyledAvatar
-            alt={author.name}
-            src={author.avatarUrl}
+            alt={postUser.username}
+            src={postUser.photo}
             sx={{
               ...((latestPostLarge || latestPost) && {
                 zIndex: 9,
@@ -118,7 +109,7 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
 
-          <StyledCover alt={title} src={cover} />
+          <StyledCover alt={title} src={cover_image} />
         </StyledCardMedia>
 
         <CardContent
@@ -136,6 +127,7 @@ export default function BlogPostCard({ post, index }) {
           </Typography>
 
           <StyledTitle
+            to={`${viewUrl}/${slug}`}
             color="inherit"
             variant="subtitle2"
             underline="hover"

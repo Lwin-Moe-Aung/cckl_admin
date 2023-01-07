@@ -20,6 +20,7 @@ export default function AddNewCategoryPage() {
         user_id: "",
         category_id: [],
         published: true,
+        cover_image: '',
         image: [],
 
     }
