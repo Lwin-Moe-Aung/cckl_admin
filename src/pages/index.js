@@ -17,3 +17,5 @@ export { default as EditCategoryPage } from './category/EditCategoryPage';
 export { default as BlogPage } from './blog/BlogPage';
 export { default as AddNewBlogPage } from './blog/AddNewBlogPage';
 export { default as ViewBlogPage } from './blog/ViewBlogPage'; 
+export { default as EditBlogPage } from './blog/EditBlogPage'; 
+

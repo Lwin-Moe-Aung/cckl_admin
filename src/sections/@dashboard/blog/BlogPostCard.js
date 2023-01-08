@@ -63,7 +63,7 @@ export default function BlogPostCard({ post, index }) {
   const { cover_image, title, view_count, postComment, postUser, createdAt, slug } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
-  const viewUrl = '/dashboard/blogs';
+  const viewUrl = '/dashboard/blogs/detail';
   const POST_INFO = [
     { number: postComment.length, icon: 'eva:message-circle-fill' },
     { number: view_count, icon: 'eva:eye-fill' },
@@ -127,7 +127,7 @@ export default function BlogPostCard({ post, index }) {
           </Typography>
 
           <StyledTitle
-            to={`${viewUrl}/${slug}`}
+            to={`${viewUrl}?b=${slug}`}
             color="inherit"
             variant="subtitle2"
             underline="hover"

@@ -10,7 +10,7 @@ import {
 import Iconify from '../../components/iconify';
 import { Form } from '../../sections/@dashboard/blog';
 
-export default function AddNewCategoryPage() {
+export default function AddNewBlogPage() {
     const location = useLocation();
     const from = location.state?.from.pathname || "/";
     const blogCreateUrl = "/admin/posts/create";

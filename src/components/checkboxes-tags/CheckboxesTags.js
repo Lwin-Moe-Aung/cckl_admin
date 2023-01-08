@@ -35,7 +35,7 @@ export default function CheckboxesTags({label, selectedCategory, setSelectedCate
     }
   },[]) 
 
-  // console.log(value);
+  // console.log(selected);
   return (
     <Autocomplete
       multiple

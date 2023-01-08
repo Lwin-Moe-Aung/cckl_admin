@@ -23,7 +23,7 @@ import { TextEditor } from '../../../components/text-editor';
 
 export default function Form({url, initValues}){
     const [published, setPublished] = useState(initValues.published);
-    const [selectedCategory, setSelectedCategory] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(initValues.category_id);
 
     const {auth} = useAuth();
     const axiosPrivate = useAxiosPrivate();
