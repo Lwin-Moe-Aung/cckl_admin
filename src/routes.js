@@ -20,6 +20,8 @@ import {
   EditBlogPage
 } from './pages';
 import { RequireAuth } from "./components/require-auth";
+import { PersistLogin } from "./components/persist-login";
+
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -28,24 +30,28 @@ export default function Router() {
       <Route  path = "/" element={<WelcomePage />}/>
       <Route  path = "/login" element={<LoginPage />}/>
       {/* <Route  path = "/register" element={<Register />}/> */}
-      <Route path = "/dashboard" element={<DashboardLayout />} >
-        {/* <Route element={<Navigate to="/dashboard/app"/>}/> */}
-        <Route element={<RequireAuth />}>
-          <Route path="app" element={<DashboardAppPage />} />
-          {/* users */}
-          <Route path="users" element={<UserPage />} />
-          <Route path="users/create" element={<AddNewUserPage />} />
-          <Route path="users/edit/:id" element={<EditUserPage />} />
-          {/* categories */}
-          <Route path="categories" element={<CategoryPage />} />
-          <Route path="categories/create" element={<AddNewCategoryPage />} />
-          <Route path="categories/edit/:id" element={<EditCategoryPage />} />
+      <Route element={<PersistLogin />}>
 
-          {/* blog */}
-          <Route path="blogs" element={<BlogPage />} />
-          <Route path="blogs/create" element={<AddNewBlogPage />} />
-          <Route path="blogs/detail" element={<ViewBlogPage />} />
-          <Route path="blogs/edit" element={<EditBlogPage />} />
+        <Route path = "/dashboard" element={<DashboardLayout />} >
+          {/* <Route element={<Navigate to="/dashboard/app"/>}/> */}
+
+            <Route element={<RequireAuth />}>
+              <Route path="app" element={<DashboardAppPage />} />
+              {/* users */}
+              <Route path="users" element={<UserPage />} />
+              <Route path="users/create" element={<AddNewUserPage />} />
+              <Route path="users/edit/:id" element={<EditUserPage />} />
+              {/* categories */}
+              <Route path="categories" element={<CategoryPage />} />
+              <Route path="categories/create" element={<AddNewCategoryPage />} />
+              <Route path="categories/edit/:id" element={<EditCategoryPage />} />
+
+              {/* blog */}
+              <Route path="blogs" element={<BlogPage />} />
+              <Route path="blogs/create" element={<AddNewBlogPage />} />
+              <Route path="blogs/detail" element={<ViewBlogPage />} />
+              <Route path="blogs/edit" element={<EditBlogPage />} />
+            </Route>
 
         </Route>
       </Route>
