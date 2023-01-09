@@ -25,7 +25,7 @@ export default function EditBlogPage() {
     const slug = searchParams.get('b'); 
     
     const url = "/admin/posts"
-    const from = location.state ? `/dashboard/blogs/detail?b=${location.state}` : "/dashboard/blogs";
+    const from = location?.state ? `/dashboard/blogs/detail?b=${location.state}` : "/dashboard/blogs";
     const blogEditUrl = "admin/posts/update";
 
     useEffect(() => {
@@ -39,6 +39,7 @@ export default function EditBlogPage() {
                 // console.log(post.data.title);
                 if(isMounted){
                     await setPost({
+                        id: post.data.id,
                         title : post.data.title,
                         description : post.data.description,
                         user_id : auth?.user?.id,
@@ -82,8 +83,10 @@ export default function EditBlogPage() {
             
             {   post && 
                 <Form
+                    backUrl = {from}
                     url= {blogEditUrl}
                     initValues={post}
+                    status="Edit"
                 />
             }
             

@@ -19,9 +19,11 @@ import { SaveButton } from '../../../components/save-button';
 import { CheckboxesTags } from '../../../components/checkboxes-tags';
 import { IOSSwitch } from '../../../components/ios-switch';
 import { TextEditor } from '../../../components/text-editor';
+import { SnackBar } from '../../../components/snackbar';
+
 /* eslint-disable camelcase */
 
-export default function Form({url, initValues}){
+export default function Form({backUrl, url, initValues, status}){
     const [published, setPublished] = useState(initValues.published);
     const [selectedCategory, setSelectedCategory] = useState(initValues.category_id);
 
@@ -31,10 +33,15 @@ export default function Form({url, initValues}){
     const [errMsg, setErrMsg] = useState('');
     const [coverImage, setCoverImage] = useState(initValues.cover_image)
     const [extraImages, setExtraImages ] = useState(initValues.image);
+     // snack bar
+    const [snackOpen, setSnackOpen] = useState(false);
+    const [severity, setSeverity] = useState();
+    const [message, setMessage] = useState();
+    const [duration, setDuration] = useState();
 
     const navigate = useNavigate();
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({defaultValues: initValues});
-    const backUrl = "/dashboard/blogs";
+    // const backUrl = "/dashboard/blogs";
     const uploadUrl = "/admin/uploads/post-image";
 
     useEffect(() => {
@@ -49,23 +56,43 @@ export default function Form({url, initValues}){
             return;
         }
         try{
-            await axiosPrivate.post(url,
+            const post = await axiosPrivate.post(url,
                 JSON.stringify({...data, cover_image:coverImage, description: data.description.value, image:extraImages}),
                 {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 }
             );
-            navigate(backUrl, { replace: true });
+            //* snack bar setting
+            let navUrl = ""
+            // let snackMsg = ""
+            if(status === "Edit"){
+                navUrl = `/dashboard/blogs/detail?b=${post.data.slug}`;
+                // snackMsg = "Successfully update post!";
+            }else{
+                navUrl = '/dashboard/blogs';
+                // snackMsg = "Successfully Create post!";
+            }
+            // await settingSnackBar(snackMsg, "success")
+            navigate(navUrl, { replace: true });
+           
         } catch (err) {
             if (err?.response?.status === 400) {
                 setErrMsg(err.response.data.message);
+                settingSnackBar(err.response.data.message, "error")
             } else {
                 setErrMsg('Post Create Failed');
+                settingSnackBar('Post Create Failed', "error")
             }
         }
     }
     
+    const settingSnackBar = (message, severity) => {
+        setSnackOpen(true);
+        setMessage(message);
+        setSeverity(severity);
+        setDuration(1000);
+    };
     return (
         <Card sx={cardstyle}>
             {
@@ -109,6 +136,7 @@ export default function Form({url, initValues}){
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
                         <TextEditor
+                            value= {initValues?.description}
                             setValue={(val) => setValue('description', val)}
                         />    
                         {editorErrMsg && <Alert severity="error" sx={{ mb: 2 }}>{editorErrMsg}</Alert>}
@@ -153,6 +181,14 @@ export default function Form({url, initValues}){
                     </Grid>
                 </Grid>
             </form>
+             {/* Success Snack bar */}
+            <SnackBar
+                open= {snackOpen}
+                duration= {duration}
+                handleClose= { ()=> setSnackOpen(false)}
+                severity= {severity}
+                message= {message}
+            />
         </Card>
     )
 }

@@ -29,20 +29,25 @@ export default function ViewBlogPage() {
     const editBlogUrl = `/dashboard/blogs/edit?b=${slug}`;
 
     const cardstyle = { width: '100%',  p: 4, backgroundColor: '#FFFFFF', fontSize: 2 };
+    const delay = ms => new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
+      
     useEffect(() => {
         let isMounted = true;
         const controller = new AbortController();
         const getPost = async () => {
             try {
+                await delay(1000);
                 const post = await axiosPrivate.get(`${url}/${slug}`,{
-                signal: controller.signal
+                    signal: controller.signal
                 });
                 if(isMounted) setPost(post.data);
             } catch (error) {
                 if(error.response.status === 400) {
-                setErrMsg(error.response.data.message)
+                    setErrMsg(error.response.data.message)
                 }else{
-                setErrMsg("Something Wrong!");
+                    setErrMsg("Something Wrong!");
                 }
             }
         }
@@ -51,10 +56,10 @@ export default function ViewBlogPage() {
           isMounted = false;
           controller.abort();
         }
-    },[])
+    },[slug])
     
-    
-    // console.log(post);
+    console.log("detail");
+    console.log(slug);
     return (
         <>
             <Container>

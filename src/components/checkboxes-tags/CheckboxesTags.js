@@ -35,7 +35,7 @@ export default function CheckboxesTags({label, selectedCategory, setSelectedCate
     }
   },[]) 
 
-  // console.log(selected);
+  // console.log(selectedCategory);
   return (
     <Autocomplete
       multiple
@@ -47,6 +47,7 @@ export default function CheckboxesTags({label, selectedCategory, setSelectedCate
       options={category}
       disableCloseOnSelect
       getOptionLabel={(option) => option.name}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       renderOption={(props, option, { selected }) => (
           <li {...props}>
               <Checkbox
@@ -62,6 +63,7 @@ export default function CheckboxesTags({label, selectedCategory, setSelectedCate
       renderInput={(params) => (
           <TextField {...params} label={label} placeholder={label} />
       )}
-    />
+    /> 
+    
   );
 }

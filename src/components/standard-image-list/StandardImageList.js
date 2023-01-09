@@ -21,7 +21,7 @@ export default function StandardImageList({images}) {
     const handleClose = () => {
         setSelectedTile(null);
       };
-      console.log(images);
+      // console.log(images);
     return (
       <>
         <ImageList sx={{ width: 600, height: '100%' }} cols={3} rowHeight={250}>

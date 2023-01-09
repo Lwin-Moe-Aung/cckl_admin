@@ -14,6 +14,7 @@ export default function AddNewBlogPage() {
     const location = useLocation();
     const from = location.state?.from.pathname || "/";
     const blogCreateUrl = "/admin/posts/create";
+    const backUrl = "/dashboard/blogs";
     const initValues = {
         title:"",
         description: "",
@@ -40,8 +41,10 @@ export default function AddNewBlogPage() {
             </Stack>
 
             <Form
+                backUrl={backUrl}
                 url= {blogCreateUrl}
                 initValues = {initValues}
+                status="Add"
             />
             
         </Container>

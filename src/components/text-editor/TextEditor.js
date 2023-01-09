@@ -1,15 +1,18 @@
 import {React, useState} from 'react'
-import { EditorState, convertToRaw} from 'draft-js';
+import { EditorState, convertToRaw, ContentState, convertFromHTML} from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { TextareaAutosize } from '@mui/material';
 import axios from '../../api/axios';
 
-export default function TextEditor({setValue}){
-    const editorState = EditorState.createEmpty();
+export default function TextEditor({value, setValue}){
+    const editorState = EditorState.createWithContent(
+        ContentState.createFromBlockArray(
+          convertFromHTML(value)
+    ));
     const [description, setDescription] = useState(editorState);
-     
+    
     const onEditorStateChange = (editorState) => {
         setDescription(editorState);
     }
