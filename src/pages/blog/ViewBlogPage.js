@@ -1,7 +1,7 @@
-import { Alert, Box, Button, Card, Chip, Container, Divider, Link, Stack, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Card, Chip, Container, Divider, Link, Stack, Typography } from '@mui/material';
 import React,{useState,useEffect} from 'react';
 import { styled } from '@mui/material/styles';
-import { useLocation , Link as RouterLink, useSearchParams} from "react-router-dom";
+import { useLocation , Link as RouterLink, useSearchParams, useNavigate} from "react-router-dom";
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import Iconify from '../../components/iconify';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
@@ -22,11 +22,13 @@ export default function ViewBlogPage() {
     const [post, setPost] = useState([]);
     const [errMsg, setErrMsg] = useState('');
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     const slug = searchParams.get('b');
     const url = "/admin/posts"
     const from = "/dashboard/blogs";
     const editBlogUrl = `/dashboard/blogs/edit?b=${slug}`;
+    const deleteUrl = "/admin/posts/delete";
 
     const cardstyle = { width: '100%',  p: 4, backgroundColor: '#FFFFFF', fontSize: 2 };
     const delay = ms => new Promise(
@@ -58,11 +60,25 @@ export default function ViewBlogPage() {
         }
     },[slug])
     
+    const handleDelete = async () => {
+        try {
+            await axiosPrivate.post(deleteUrl, JSON.stringify({post_id: post?.id}))
+            navigate(from, {replace: true})
+        } catch (error) {
+            if(error.response.status === 400) {
+                setErrMsg(error.response.data.message);
+            }else{
+                setErrMsg("Something Wrong!");
+            }
+        }
+    }
     console.log("detail");
     console.log(slug);
+    console.log(post);
     return (
         <>
             <Container>
+                
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
                         Post Detail
@@ -76,6 +92,16 @@ export default function ViewBlogPage() {
                 <Card sx={cardstyle}>
                     {   errMsg && <Alert severity="error" sx={{ mb: 2 }}>{errMsg}</Alert>   }
                     <Stack direction="row" spacing={1}>
+                        <Avatar alt="Remy Sharp" src={post?.postUser?.photo} />
+                        <Stack direction="column">
+                            <Typography> {post?.postUser?.username} </Typography>
+                            <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block'}}>
+                                {fDate(post?.createdAt)}
+                            </Typography>
+                        </Stack>
+                    </Stack>
+
+                    <Stack direction="row" spacing={1}>
                         <Typography variant="h4" justify="center">
                             { post?.title }
 
@@ -86,9 +112,7 @@ export default function ViewBlogPage() {
                             </Box>
                         </Typography>
                     </Stack>
-                    <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' ,p:1 }}>
-                        {fDate(post?.createdAt)}
-                    </Typography>
+                    
                     {/* <Divider /> */}
                     
                     <Typography
@@ -103,11 +127,12 @@ export default function ViewBlogPage() {
                         <StandardImageList images={post?.image}/>
                     </StyledImagesBox>
 
-                    <Box sx={{  display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', }}>
+                    <Stack direction="row" spacing={2} sx={{  display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', }}>
+                        <Button variant="outlined" color="error" onClick={handleDelete}>Delete</Button>
                         <Link to={editBlogUrl} component={RouterLink} state={slug}>
                             <Button variant="outlined">Edit</Button>
                         </Link>
-                    </Box>
+                    </Stack>
                 </Card>
             </Container>
         </>
