@@ -60,16 +60,16 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { cover_image, title, view_count, postComment, postUser, createdAt, slug } = post;
+  const { cover_image, title, view_count, commentCount, user, createdAt, slug } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
   const viewUrl = '/dashboard/blogs/detail';
   const POST_INFO = [
-    { number: postComment.length, icon: 'eva:message-circle-fill' },
+    { number: commentCount, icon: 'eva:message-circle-fill' },
     { number: view_count, icon: 'eva:eye-fill' },
   ];
 
-  console.log(postComment)
+  console.log(commentCount)
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
       <Card sx={{ position: 'relative' }}>
@@ -96,8 +96,8 @@ export default function BlogPostCard({ post, index }) {
         >
          
           <StyledAvatar
-            alt={postUser.username}
-            src={postUser.photo}
+            alt={user.username}
+            src={user.photo}
             sx={{
               ...((latestPostLarge || latestPost) && {
                 zIndex: 9,

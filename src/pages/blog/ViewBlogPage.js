@@ -3,10 +3,14 @@ import React,{useState,useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import { useLocation , Link as RouterLink, useSearchParams, useNavigate} from "react-router-dom";
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import MessageIcon from '@mui/icons-material/Message';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import Iconify from '../../components/iconify';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { fDate } from '../../utils/formatTime';
+import { fShortenNumber } from '../../utils/formatNumber';
 import { StandardImageList } from '../../components/standard-image-list';
+
 
 const StyledImagesBox = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -15,6 +19,14 @@ const StyledImagesBox = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
     color: theme.palette.text.disabled,
 }));
+
+const StyledInfo = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    marginTop: theme.spacing(3),
+    color: theme.palette.text.disabled,
+  }));
 
 export default function ViewBlogPage() {
     const location = useLocation();
@@ -126,6 +138,31 @@ export default function ViewBlogPage() {
                     <StyledImagesBox >
                         <StandardImageList images={post?.image}/>
                     </StyledImagesBox>
+                    <StyledInfo>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                ml: 1.5,
+                            }}
+                        >
+                            {/* <Iconify icon='eva:message-circle-fill' sx={{ width: 16, height: 16, mr: 0.5 }} /> */}
+                            <MessageIcon/>
+                            <Typography variant="caption">{fShortenNumber(post?.commentCount)}</Typography>
+                        </Box>
+                        ))
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                ml:1.5,
+                            }}
+                        >
+                            <RemoveRedEyeIcon/>
+                            <Typography variant="caption">{fShortenNumber(post?.view_count)}</Typography>
+                        </Box>
+                        ))
+                    </StyledInfo>
 
                     <Stack direction="row" spacing={2} sx={{  display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', }}>
                         <Button variant="outlined" color="error" onClick={handleDelete}>Delete</Button>
