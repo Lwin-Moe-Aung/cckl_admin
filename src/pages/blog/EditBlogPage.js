@@ -36,14 +36,15 @@ export default function EditBlogPage() {
                 const post = await axiosPrivate.get(`${url}/${slug}`,{
                     signal: controller.signal
                 });
-                // console.log(post.data.title);
+
+                console.log(post);
                 if(isMounted){
                     await setPost({
                         id: post.data.id,
                         title : post.data.title,
                         description : post.data.description,
                         user_id : auth?.user?.id,
-                        category_id : post.data.postCategories,
+                        category_id : post.data.categories,
                         published : post.data.published,
                         cover_image : post.data.cover_image,
                         image : post.data.image

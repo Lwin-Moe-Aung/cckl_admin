@@ -84,9 +84,7 @@ export default function ViewBlogPage() {
             }
         }
     }
-    console.log("detail");
-    console.log(slug);
-    console.log(post);
+   
     return (
         <>
             <Container>
@@ -104,9 +102,9 @@ export default function ViewBlogPage() {
                 <Card sx={cardstyle}>
                     {   errMsg && <Alert severity="error" sx={{ mb: 2 }}>{errMsg}</Alert>   }
                     <Stack direction="row" spacing={1}>
-                        <Avatar alt="Remy Sharp" src={post?.postUser?.photo} />
+                        <Avatar alt="Remy Sharp" src={post?.user?.photo} />
                         <Stack direction="column">
-                            <Typography> {post?.postUser?.username} </Typography>
+                            <Typography> {post?.user?.username} </Typography>
                             <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block'}}>
                                 {fDate(post?.createdAt)}
                             </Typography>
@@ -118,7 +116,7 @@ export default function ViewBlogPage() {
                             { post?.title }
 
                             <Box>
-                                {post?.postCategories?.map((item, index) => (
+                                {post?.categories?.map((item, index) => (
                                     <Chip icon={<BookmarksIcon />} label={item.name} variant="outlined" key={index}/>
                                 ))}
                             </Box>
