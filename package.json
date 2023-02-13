@@ -86,5 +86,5 @@
   "overrides": {
     "@svgr/webpack": "^6.5.0"
   },
-  "proxy": "http://54.169.192.233:8080/api/"
+  "proxy": "https://54.169.192.233:8080/api/"
 }
