@@ -17,6 +17,37 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
+    title: 'Navbar Menu',
+    path: '/dashboard/navbar-menus',
+    icon: icon('ic_lock'),
+  },
+
+  {
+    title: 'Navbar SubMenu',
+    path: '/dashboard/navbar-sub-menus',
+    icon: icon('ic_lock'),
+  },
+  {
+    title: 'Logo',
+    path: '/dashboard/logo',
+    icon: icon('ic_lock'),
+  },
+  {
+    title: 'Banner',
+    path: '/dashboard/banner',
+    icon: icon('ic_lock'),
+  },
+  {
+    title: 'Heroes Text',
+    path: '/dashboard/heroes-text',
+    icon: icon('ic_lock'),
+  },
+  {
+    title: 'Heroes People',
+    path: '/dashboard/heroes-people',
+    icon: icon('ic_lock'),
+  },
+  {
     title: 'Categories',
     path: '/dashboard/categories',
     icon: icon('ic_cart'),

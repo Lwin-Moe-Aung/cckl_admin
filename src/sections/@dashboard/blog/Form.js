@@ -136,6 +136,7 @@ export default function Form({backUrl, url, initValues, status}){
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
                         <TextEditor
+                            uploadUrl = "/admin/uploads/post-image"
                             value= {initValues?.description}
                             setValue={(val) => setValue('description', val)}
                         />    

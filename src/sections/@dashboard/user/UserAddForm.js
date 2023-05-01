@@ -47,9 +47,11 @@ export default function UserAddForm({url, initValues}){
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 }
-            );
-            // error throwing
-            navigate(backUrl, { replace: true });
+            ).then(res => {
+                setTimeout(() => {
+                    if(res.status === 200 ) navigate(backUrl, { replace: true })
+                }, 1000);
+            });
         } catch (err) {
             if (err?.response?.status === 400) {
                 setErrMsg(err.response.data.message);

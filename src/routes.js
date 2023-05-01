@@ -17,10 +17,25 @@ import {
   EditCategoryPage,
   AddNewBlogPage,
   ViewBlogPage,
-  EditBlogPage
+  EditBlogPage,
+  NavBarMenuPage,
+  AddNewNavBarMenuPage,
+  EditNavBarMenuPage,
+  NavBarSubMenuPage,
+  AddNewNavBarSubMenuPage,
+  EditNavBarSubMenuPage,
+  ViewPage,
+  LogoPage,
+  BannerPage,
+  AddBannerPage,
+  HeroesTextPage,
+  AddHeroesTextPage,
+  EditHeroesPeoplePage,
 } from './pages';
 import { RequireAuth } from "./components/require-auth";
 import { PersistLogin } from "./components/persist-login";
+import HeroesPeoplePage from "./pages/heroes-people/HeroesPeoplePage";
+import AddHeroesPeoplePage from "./pages/heroes-people/AddHeroesPeoplePage";
 
 // ----------------------------------------------------------------------
 
@@ -37,10 +52,39 @@ export default function Router() {
 
             <Route element={<RequireAuth />}>
               <Route path="app" element={<DashboardAppPage />} />
+
+              {/* Navbar Menu */}
+              <Route path="navbar-menus" element={<NavBarMenuPage />} />
+              <Route path="navbar-menus/create" element={<AddNewNavBarMenuPage />} />
+              <Route path="navbar-menus/edit/:id" element={<EditNavBarMenuPage />} />
+
+              {/* Navbar Sub Menu */}
+              <Route path="navbar-sub-menus" element={<NavBarSubMenuPage />} />
+              <Route path="navbar-sub-menus/create" element={<AddNewNavBarSubMenuPage />} />
+              <Route path="navbar-sub-menus/edit/:id" element={<EditNavBarSubMenuPage />} />
+              <Route path="navbar-sub-menus/:id" element={<ViewPage />} />
+
+               {/* Logo */}
+              <Route path="logo" element={<LogoPage />} />
+              
+              {/* banner */}
+              <Route path="banner" element={<BannerPage />} />
+              <Route path="banner/create" element={<AddBannerPage />} />
+
+              {/* herores-text */}
+              <Route path="heroes-text" element={<HeroesTextPage />} />
+              <Route path="heroes-text/create" element={<AddHeroesTextPage />} />
+
+              {/* heroes people */}
+              <Route path="heroes-people" element={<HeroesPeoplePage />} />
+              <Route path="heroes-people/create" element={<AddHeroesPeoplePage />} />
+              <Route path="heroes-people/edit/:id" element={<EditHeroesPeoplePage />} />
+
               {/* users */}
               <Route path="users" element={<UserPage />} />
               <Route path="users/create" element={<AddNewUserPage />} />
               <Route path="users/edit/:id" element={<EditUserPage />} />
+
               {/* categories */}
               <Route path="categories" element={<CategoryPage />} />
               <Route path="categories/create" element={<AddNewCategoryPage />} />

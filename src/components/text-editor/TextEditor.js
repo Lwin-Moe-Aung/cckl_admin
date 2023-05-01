@@ -6,7 +6,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { TextareaAutosize } from '@mui/material';
 import axios from '../../api/axios';
 
-export default function TextEditor({value, setValue}){
+export default function TextEditor({uploadUrl, value, setValue}){
     const editorState = EditorState.createWithContent(
         ContentState.createFromBlockArray(
           convertFromHTML(value)
@@ -16,7 +16,7 @@ export default function TextEditor({value, setValue}){
     const onEditorStateChange = (editorState) => {
         setDescription(editorState);
     }
-    const uploadUrl = "/admin/uploads/post-image";
+    // const uploadUrl = "/admin/uploads/post-image";
 
     const uploadImageCallBack = (files) => {
         return new Promise((resolve, reject) => {
