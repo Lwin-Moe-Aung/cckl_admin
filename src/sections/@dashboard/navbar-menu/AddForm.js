@@ -32,7 +32,7 @@ export default function UserAddForm({url, initValues}){
     const cardstyle = { width: '100%',  p: 2, backgroundColor: '#FFFFFF', fontSize: 2 };
     const onSubmit = async (data) => {
         // e.preventDefault();
-        try{
+        // try{
             axiosPrivate.post(url,
                 JSON.stringify(data),
                 {
@@ -41,17 +41,20 @@ export default function UserAddForm({url, initValues}){
                 }
             ).then(res => {
                 setTimeout(() => {
-                    if(res.status === 200 ) navigate(backUrl, { replace: true })
+                    navigate(backUrl, { replace: true })
                 }, 1000);
+            }).catch(err => {
+                setErrMsg(err.response.data.message);
             });
             
-        } catch (err) {
-            if (err?.response?.status === 400) {
-                setErrMsg(err.response.data.message);
-            } else {
-                setErrMsg('Create Failed');
-            }
-        }
+        // } catch (err) {
+        //     console.log(err);
+        //     if (err?.response?.status === 400) {
+        //         setErrMsg(err.response.data.message);
+        //     } else {
+        //         setErrMsg('Create Failed');
+        //     }
+        // }
     }
 
     return (

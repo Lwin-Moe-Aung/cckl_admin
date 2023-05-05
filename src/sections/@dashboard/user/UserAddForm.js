@@ -49,7 +49,7 @@ export default function UserAddForm({url, initValues}){
                 }
             ).then(res => {
                 setTimeout(() => {
-                    if(res.status === 200 ) navigate(backUrl, { replace: true })
+                    navigate(backUrl, { replace: true })
                 }, 1000);
             });
         } catch (err) {
