@@ -3,6 +3,11 @@ export { default as DashboardAppPage } from './DashboardAppPage';
 export { default as LoginPage } from './LoginPage';
 export { default as Page404 } from './Page404';
 
+//* feature
+export { default as FeaturePage } from './feature/FeaturePage';
+export { default as AddFeaturePage } from './feature/AddFeaturePage';
+export { default as EditFeaturePage } from './feature/EditFeaturePage';
+
 
 //* navbar menu
 export { default as NavBarMenuPage } from './navbar-menu/NavBarMenuPage';
@@ -17,6 +22,9 @@ export { default as ViewPage } from './navbar-sub-menu/ViewPage';
 
 //* Logo
 export { default as LogoPage } from './logo/LogoPage';
+
+//* Map
+export { default as MapPage } from './map/MapPage';
 
 //* Banner
 export { default as BannerPage } from './banner/BannerPage';

@@ -31,6 +31,10 @@ import {
   HeroesTextPage,
   AddHeroesTextPage,
   EditHeroesPeoplePage,
+  FeaturePage,
+  AddFeaturePage,
+  EditFeaturePage,
+  MapPage
 } from './pages';
 import { RequireAuth } from "./components/require-auth";
 import { PersistLogin } from "./components/persist-login";
@@ -64,13 +68,20 @@ export default function Router() {
               <Route path="navbar-sub-menus/edit/:id" element={<EditNavBarSubMenuPage />} />
               <Route path="navbar-sub-menus/:id" element={<ViewPage />} />
 
-               {/* Logo */}
+              {/* Logo */}
               <Route path="logo" element={<LogoPage />} />
               
               {/* banner */}
               <Route path="banner" element={<BannerPage />} />
               <Route path="banner/create" element={<AddBannerPage />} />
 
+               {/* Feature */}
+              <Route path="feature" element={<FeaturePage />} />
+              <Route path="feature/create" element={<AddFeaturePage />} />
+              <Route path="feature/edit/:id" element={<EditFeaturePage />} />
+              {/* Map */}
+              <Route path="map" element={<MapPage />} />
+              
               {/* herores-text */}
               <Route path="heroes-text" element={<HeroesTextPage />} />
               <Route path="heroes-text/create" element={<AddHeroesTextPage />} />
