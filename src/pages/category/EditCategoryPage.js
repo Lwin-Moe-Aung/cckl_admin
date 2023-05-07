@@ -33,7 +33,7 @@ export default function EditCategoryPage() {
                 const response = await axiosPrivate.get(`${getCategoryUrl}/${id}`, {
                     signal: controller.signal
                 });
-                const {createdAt, updatedAt, ...other} = response.data;
+                const {createdAt, updatedAt,slug, ...other} = response.data;
                 if(isMounted) await setCategory(other);
             } catch (err) {
                 if(err.response.status === 400){
